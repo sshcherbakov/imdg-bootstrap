@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2014 GoPivotal, Inc. All Rights Reserved
+  
+  This software contains the intellectual property of GoPivotal, Inc. or is
+  licensed to GoPivotal, Inc. from third parties. Use of this software and
+  the intellectual property contained therein is expressly limited to the
+  terms and conditions of the License Agreement under which it is provided
+  by or on behalf of GoPivotal, Inc.
+-->
+<configuration scan="true">
+
+	<jmxConfigurator />
+
+	<property resource="application.properties" />
+	
+	<appender name="APPLICATION" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${app.dir}/var/log/${application.id}/imdg-demo.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${app.dir}/var/log/${application.id}/imdg-demo.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<maxHistory>10</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>16MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d %r %5p [%t] %c - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="ASYNCAPPLICATION" class="ch.qos.logback.classic.AsyncAppender">
+		<appender-ref ref="APPLICATION" />
+	</appender>
+	
+	<logger name="io.pivotal.demo.imdg.bootstrap" level="debug" />
+
+	<root level="info">
+		<appender-ref ref="ASYNCAPPLICATION" />
+	</root>
+</configuration>
